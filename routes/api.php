@@ -2,53 +2,20 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use \App\Models\Division;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
+use App\Http\Controllers\DivisionController;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('divisions', [DivisionController::class, 'index']);
+Route::get('divisions/{id}', [DivisionController::class, 'show']);
+Route::get('divisions/{id}/list_of_divisions', [DivisionController::class, 'list_divisions']);
+Route::get('divisions/{id}/upper_division', [DivisionController::class, 'upper_division']);
 
-Route::get('divisions', function() {
-    return Division::all();
-});
+Route::post('divisions', [DivisionController::class, 'store']);
 
-Route::post('divisions', function(Request $request) {
-    return Division::create($request->all());
-});
+Route::put('divisions/{id}', [DivisionController::class, 'update']);
 
+Route::delete('divisions/{id}', [DivisionController::class, 'delete']);
 
-Route::get('divisions/{id}', function($id) {
-    return Division::find($id);
-});
-
-Route::get('divisions/{id}/list_of_divisions', function($id) {
-    return Division::find($id)->divisions;
-});
-
-Route::get('divisions/{id}/upper_division', function($id) {
-    return Division::find($id)->parent;
-});
-
-Route::put('divisions/{id}', function(Request $request, $id) {
-    $division = Division::findOrFail($id);
-    $division->update($request->all());
-    return $division;
-});
-
-
-Route::delete('divisions/{id}', function($id) {
-    $division = Division::find($id)->delete();
-    return 204;
-});
